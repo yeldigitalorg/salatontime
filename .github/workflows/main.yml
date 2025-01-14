@@ -1,4 +1,4 @@
-name: Build and Deploy Salatontime Angular App
+name: Create and Deploy Angular Frontend
 
 on:
   push:
@@ -14,20 +14,15 @@ jobs:
 
       # Step 1: Build Docker image
       - name: Build Docker image
-        run: docker build -t salatontime-frontend .
         working-directory: ./salatontime-frontend
+        run: docker build -t salatontime-frontend .
 
       # Step 2: Remove old Docker container
       - name: Remove old Docker container
         run: |
           if docker ps -a --format '{{.Names}}' | grep -q '^salatontime-frontend$'; then
             docker rm -f salatontime-frontend
-          fi.
-        working-directory: ./salatontime-frontend
-
-      # Step 3: Create application-specific network (optional, if required)
-      # - name: Create app network
-      #   run: docker network create salatontime-network > /dev/null 2>&1 || echo done
+          fi
 
       # Step 4: Run Docker container
       - name: Run Docker container
@@ -42,7 +37,3 @@ jobs:
             --label traefik.http.routers.salatontime-frontend.entrypoints=websecure \
             --label traefik.http.routers.salatontime-frontend.tls.certresolver=letsencrypt \
             -d salatontime-frontend:latest
-
-      # Step 5: Connect app to reverse proxy network (if needed)
-      # - name: Connect app to reverse proxy network
-      #   run: docker network connect reverse-proxy-network salatontime-frontend > /dev/null 2>&1 || echo done
