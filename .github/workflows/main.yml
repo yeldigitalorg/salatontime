@@ -14,14 +14,16 @@ jobs:
 
       # Step 1: Build Docker image
       - name: Build Docker image
-        run: docker build -t salatontime-frontend ./salatontime-frontend
+        run: docker build -t salatontime-frontend .
+        working-directory: ./salatontime-frontend
 
       # Step 2: Remove old Docker container
       - name: Remove old Docker container
         run: |
           if docker ps -a --format '{{.Names}}' | grep -q '^salatontime-frontend$'; then
             docker rm -f salatontime-frontend
-          fi
+          fi.
+        working-directory: ./salatontime-frontend
 
       # Step 3: Create application-specific network (optional, if required)
       # - name: Create app network
